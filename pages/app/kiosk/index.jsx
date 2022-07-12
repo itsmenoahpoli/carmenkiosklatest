@@ -1,36 +1,26 @@
-import React from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Image,
-  Card,
-  Button,
-  Alert,
-  Table,
-} from "react-bootstrap";
-import axios from "axios";
-import Swal from "sweetalert2";
+import React from 'react';
+import { Container, Row, Col, Image, Card, Button, Alert, Table } from 'react-bootstrap';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
-import { KioskLayout } from "components/layouts";
-import { ProductCategoriesService } from "lib/services";
+import { KioskLayout } from 'components/layouts';
+import { ProductCategoriesService } from 'lib/services';
 
 const productCategoriesService = new ProductCategoriesService();
 
 const KioskPage = () => {
-  const [categories, setCategories] = React.useState([])
+  const [categories, setCategories] = React.useState([]);
   const [foodCart, setFoodCart] = React.useState([]);
 
   const getProductsByCategory = async (category) => {
-    await productCategoriesService.getAll('').then(response => {
-      setCategories(response.data)
-    })
+    await productCategoriesService.getAll('').then((response) => {
+      setCategories(response.data);
+    });
   };
 
   React.useEffect(() => {
     getProductsByCategory();
   }, []);
-
 
   const getTotalAmount = () => {
     let totalAmount = foodCart.reduce(function (acc, obj) {
@@ -62,8 +52,7 @@ const KioskPage = () => {
         let oldCart = [...foodCart];
 
         oldCart[i].quantity = oldCart[i].quantity + 1;
-        oldCart[i].totalCost =
-          parseInt(oldCart[i].price) * parseInt(oldCart[i].quantity);
+        oldCart[i].totalCost = parseInt(oldCart[i].price) * parseInt(oldCart[i].quantity);
 
         setFoodCart(oldCart);
 
@@ -95,21 +84,17 @@ const KioskPage = () => {
 
     if (items || items.length) {
       return items.map((item) => (
-        <Col
-          md={4}
-          className="product-item text-center"
-          key={`${item.id}${item.name}`}
-        >
+        <Col md={4} className="product-item text-center" key={`${item.id}${item.name}`}>
           <div className="product-item-content">
             <div className="mb-3">
               <Image
                 fluid
-                src={item.image_url ?? "/assets/images/img-placeholder.jpg"}
+                src={item.image_url ?? '/assets/images/img-placeholder.jpg'}
                 alt="Brgy.pitogo logo"
-                style={{height: "150px", width: "200px"}}
+                style={{ height: '150px', width: '200px' }}
               />
             </div>
-  
+
             <p className="mb-0">
               <small>{item.name}</small>
             </p>
@@ -128,18 +113,16 @@ const KioskPage = () => {
   const handleUpdateCartItemQty = (idx, method) => {
     let oldCart = [...foodCart];
 
-    if (method === "-") {
+    if (method === '-') {
       oldCart[idx].quantity = oldCart[idx].quantity - 1;
-      oldCart[idx].totalCost =
-        parseInt(oldCart[idx].quantity) * parseInt(oldCart[idx].price);
+      oldCart[idx].totalCost = parseInt(oldCart[idx].quantity) * parseInt(oldCart[idx].price);
       setFoodCart(oldCart);
       return;
     }
 
-    if (method === "+") {
+    if (method === '+') {
       oldCart[idx].quantity = oldCart[idx].quantity + 1;
-      oldCart[idx].totalCost =
-        parseInt(oldCart[idx].quantity) * parseInt(oldCart[idx].price);
+      oldCart[idx].totalCost = parseInt(oldCart[idx].quantity) * parseInt(oldCart[idx].price);
       setFoodCart(oldCart);
 
       return;
@@ -156,8 +139,8 @@ const KioskPage = () => {
   };
 
   const handleCheckout = async () => {
-    const devURL = "http://localhost:8000/api/v1";
-    const prodURL  = "https://sisig-barn-app.pwnp-ws.com/public/api/v1";
+    const devURL = 'http://localhost:8000/api/v1';
+    const prodURL = 'https://sisig-barn-app.pwnp-ws.com/public/api/v1';
 
     const axiosBaseURL = prodURL;
     await axios
@@ -165,14 +148,14 @@ const KioskPage = () => {
         table: 1,
         order_cart: foodCart,
         total_amount: getTotalAmount(),
-        payment_method: "CASH",
+        payment_method: 'CASH',
       })
       .then((response) => {
         Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Your order has been successfully submitted!",
-          confirmButtonText: "Okay",
+          icon: 'success',
+          title: 'Success',
+          text: 'Your order has been successfully submitted!',
+          confirmButtonText: 'Okay',
         });
 
         setFoodCart([]);
@@ -198,19 +181,24 @@ const KioskPage = () => {
     return items.map((item, idx) => (
       <tr key={`${idx}${item.name}${item.price}`}>
         <td>
-          <button className="btn btn-danger btn-sm text-white" onClick={() => handleRemoveItemFromCart(idx)}><small>&times;</small></button>
+          <button
+            className="btn btn-danger btn-sm text-white"
+            onClick={() => handleRemoveItemFromCart(idx)}
+          >
+            <small>&times;</small>
+          </button>
         </td>
         <td>{item.name}</td>
         <td>
           {item.quantity}
           <div className="btn-group">
             <button
-              onClick={() => handleUpdateCartItemQty(idx, "-")}
+              onClick={() => handleUpdateCartItemQty(idx, '-')}
               disabled={Boolean(foodCart[idx].quantity === 1)}
             >
               -
             </button>
-            <button onClick={() => handleUpdateCartItemQty(idx, "+")}>+</button>
+            <button onClick={() => handleUpdateCartItemQty(idx, '+')}>+</button>
           </div>
         </td>
         <td>₱ {parseInt(item.price) * parseInt(item.quantity)}</td>
@@ -220,20 +208,22 @@ const KioskPage = () => {
 
   const renderMenu = () => {
     if (!categories.length) {
-      return <p>No products available</p>
+      return <p>No products available</p>;
     }
 
-    return categories.map(c => <Card className="menu-card" key={`menu-category-${c.name}`}>
-    <Card.Header>
-      <h6>{c.name}</h6>
-    </Card.Header>
-    <Card.Body>
-      <Container fluid className="product-scroll-container">
-        <Row className="row">{renderProductItems(c.products)}</Row>
-      </Container>
-    </Card.Body>
-  </Card>)
-  }
+    return categories.map((c) => (
+      <Card className="menu-card" key={`menu-category-${c.name}`}>
+        <Card.Header>
+          <h6>{c.name}</h6>
+        </Card.Header>
+        <Card.Body>
+          <Container fluid className="product-scroll-container">
+            <Row className="row">{renderProductItems(c.products)}</Row>
+          </Container>
+        </Card.Body>
+      </Card>
+    ));
+  };
 
   return (
     <KioskLayout>
@@ -244,13 +234,13 @@ const KioskPage = () => {
             <div className="text-center">
               <Image
                 fluid
-                src="/assets/images/sisig-barn-logo.png"
+                src="/assets/images/brand-logo.jpg"
                 alt="Brgy.pitogo logo"
                 height={130}
                 width={130}
               />
             </div>
-            
+
             {renderMenu()}
           </Col>
 
