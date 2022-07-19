@@ -1,15 +1,15 @@
-import React from "react";
-import { Container, Button, Form, Card, Modal, Badge } from "react-bootstrap";
+import React from 'react';
+import { Container, Button, Form, Card, Modal, Badge } from 'react-bootstrap';
 
-import { DashboardLayout } from "components/layouts";
-import { TableBuilder } from "components/tables";
-import { EmployeeForm } from "components/forms/by-modules";
-import { EmployeeService } from "lib/services";
+import { DashboardLayout } from 'components/layouts';
+import { TableBuilder } from 'components/tables';
+import { EmployeeForm } from 'components/forms/by-modules';
+import { EmployeeService } from 'lib/services';
 
 const employeesService = new EmployeeService();
 
 const EmployeesPage = () => {
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState('');
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [employeeModal, setEmployeeModal] = React.useState({
@@ -27,18 +27,15 @@ const EmployeesPage = () => {
 
   const handleFormSubmit = async (formData) => {
     if (employeeModal.data) {
-      await employeesService.updateEmployeeById(
-        employeeModal.data.id,
-        formData
-      );
-      await getEmployees("");
+      await employeesService.updateEmployeeById(employeeModal.data.id, formData);
+      await getEmployees('');
       handleEmployeeModal(false, null);
 
       return;
     }
 
     await employeesService.createEmployee(formData);
-    await getEmployees("");
+    await getEmployees('');
 
     handleEmployeeModal(false, null);
   };
@@ -48,9 +45,9 @@ const EmployeesPage = () => {
   };
 
   const handleDeleteProduct = async (employeeId) => {
-    if (confirm("Do you confirm to delete this employee record?")) {
+    if (confirm('Do you confirm to delete this employee record?')) {
       await employeesService.deleteEmployeeById(employeeId);
-      await getEmployees("");
+      await getEmployees('');
     }
   };
 
@@ -69,51 +66,51 @@ const EmployeesPage = () => {
   const tableColumns = React.useMemo(
     () => [
       {
-        name: "Employee No.",
+        name: 'Employee No.',
         selector: (row) => row.emp_no,
         sortable: true,
       },
       {
-        name: "Status",
+        name: 'Status',
         selector: (row) => row.is_enabled,
         sortable: true,
-        cell: row => {
-          return row.status ? <Badge bg="success">Enabled</Badge> : <Badge bg="danger">Disabled</Badge>
-        }
+        cell: (row) => {
+          return row.status ? (
+            <Badge bg="success">Enabled</Badge>
+          ) : (
+            <Badge bg="danger">Disabled</Badge>
+          );
+        },
       },
       {
-        name: "Name",
+        name: 'Name',
         selector: (row) => row.name,
         sortable: true,
       },
       {
-        name: "Email",
+        name: 'Email',
         selector: (row) => row.email,
         sortable: true,
       },
       {
-        name: "Contacts",
+        name: 'Contacts',
         selector: (row) => row.contacts,
         sortable: true,
         cell: (row) => formatEmployeeContacts(row.contacts),
       },
       {
-        name: "Address",
+        name: 'Address',
         selector: (row) => row.address,
         sortable: true,
       },
       {
-        name: "Actions",
+        name: 'Actions',
         selector: (row) => row.id,
         sortable: true,
         right: true,
         cell: (row) => (
           <>
-            <Button
-              variant="link"
-              className="mx-1"
-              onClick={() => handleEditProduct(row)}
-            >
+            <Button variant="link" className="mx-1" onClick={() => handleEditProduct(row)}>
               Edit
             </Button>
             {/* <Button
@@ -135,7 +132,7 @@ const EmployeesPage = () => {
   }, []);
 
   React.useEffect(() => {
-    if (search !== "") {
+    if (search !== '') {
       getEmployees(search);
     }
   }, [search]);
@@ -143,10 +140,7 @@ const EmployeesPage = () => {
     <DashboardLayout title="Employees">
       <Container fluid className="datatable-header">
         <div>
-          <Button
-            variant="primary"
-            onClick={() => handleEmployeeModal(true, null)}
-          >
+          <Button variant="primary" onClick={() => handleEmployeeModal(true, null)}>
             Add New Employee
           </Button>
         </div>
@@ -169,20 +163,13 @@ const EmployeesPage = () => {
       </Card>
 
       {/* MODAL */}
-      <Modal
-        size="lg"
-        show={employeeModal.show}
-        onHide={() => handleEmployeeModal(false, null)}
-      >
+      <Modal size="lg" show={employeeModal.show} onHide={() => handleEmployeeModal(false, null)}>
         <Modal.Header closeButton>
           <Modal.Title>Employee Form</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <EmployeeForm
-            values={employeeModal.data}
-            formFns={{ formSubmitFn: handleFormSubmit }}
-          />
+          <EmployeeForm values={employeeModal.data} formFns={{ formSubmitFn: handleFormSubmit }} />
         </Modal.Body>
       </Modal>
     </DashboardLayout>

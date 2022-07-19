@@ -62,11 +62,13 @@ export const EmployeePayslipForm = (props) => {
             placeholder="Employee"
           >
             <option value="">Choose</option>
-            {employees.map((employee) => (
-              <option key={employee.id} value={employee.id}>
-                {employee.name}
-              </option>
-            ))}
+            {employees
+              .filter((x) => x.status !== 0)
+              .map((employee) => (
+                <option key={employee.id} value={employee.id}>
+                  {employee.name}
+                </option>
+              ))}
           </Form.Select>
         </FloatingLabel>
       </Form.Group>

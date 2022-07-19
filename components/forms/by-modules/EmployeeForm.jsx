@@ -1,10 +1,6 @@
-import React from "react";
-import {
-  Button,
-  Form,
-  FloatingLabel,
-} from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import React from 'react';
+import { Button, Form, FloatingLabel } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 
 export const EmployeeForm = (props) => {
   const { formFns, values } = props;
@@ -23,13 +19,11 @@ export const EmployeeForm = (props) => {
     <Form onSubmit={handleSubmit(handleFormSubmit)}>
       <Form.Group className="form-group">
         <FloatingLabel label="Employee Status">
-        <Form.Select
+          <Form.Select
             className={
-              Boolean(errors && errors.status?.type === "required")
-                ? "border border-danger"
-                : ""
+              Boolean(errors && errors.status?.type === 'required') ? 'border border-danger' : ''
             }
-            {...register("status", { required: true })}
+            {...register('status', { required: true })}
             defaultValue={values?.status}
             placeholder="Status"
           >
@@ -45,11 +39,9 @@ export const EmployeeForm = (props) => {
           <Form.Control
             type="text"
             className={
-              Boolean(errors && errors.name?.type === "required")
-                ? "border border-danger"
-                : ""
+              Boolean(errors && errors.name?.type === 'required') ? 'border border-danger' : ''
             }
-            {...register("name", { required: true })}
+            {...register('name', { required: true })}
             defaultValue={values?.name}
             // readOnly={values?.name !== '' || values?.name !== null ? true : false}
             placeholder="Name"
@@ -62,11 +54,9 @@ export const EmployeeForm = (props) => {
           <Form.Control
             type="email"
             className={
-              Boolean(errors && errors.email?.type === "required")
-                ? "border border-danger"
-                : ""
+              Boolean(errors && errors.email?.type === 'required') ? 'border border-danger' : ''
             }
-            {...register("email", { required: true })}
+            {...register('email', { required: true })}
             defaultValue={values?.email}
             placeholder="Email"
           />
@@ -78,11 +68,9 @@ export const EmployeeForm = (props) => {
           <Form.Control
             type="number"
             className={
-              Boolean(errors && errors.contacts?.type === "required")
-                ? "border border-danger"
-                : ""
+              Boolean(errors && errors.contacts?.type === 'required') ? 'border border-danger' : ''
             }
-            {...register("contacts", { required: true })}
+            {...register('contacts', { required: true })}
             defaultValue={values?.contacts}
             placeholder="Contacts"
           />
@@ -94,11 +82,9 @@ export const EmployeeForm = (props) => {
           <Form.Control
             type="date"
             className={
-              Boolean(errors && errors.birthdate?.type === "required")
-                ? "border border-danger"
-                : ""
+              Boolean(errors && errors.birthdate?.type === 'required') ? 'border border-danger' : ''
             }
-            {...register("birthdate", { required: true })}
+            {...register('birthdate', { required: true })}
             defaultValue={values?.birthdate}
             placeholder="birthdate"
           />
@@ -109,11 +95,9 @@ export const EmployeeForm = (props) => {
         <FloatingLabel label="Gender">
           <Form.Select
             className={
-              Boolean(errors && errors.gender?.type === "required")
-                ? "border border-danger"
-                : ""
+              Boolean(errors && errors.gender?.type === 'required') ? 'border border-danger' : ''
             }
-            {...register("gender", { required: true })}
+            {...register('gender', { required: true })}
             defaultValue={values?.gender}
             placeholder="Gender"
           >
@@ -129,12 +113,10 @@ export const EmployeeForm = (props) => {
           <Form.Control
             type="text"
             className={
-              Boolean(errors && errors.address?.type === "required")
-                ? "border border-danger"
-                : ""
+              Boolean(errors && errors.address?.type === 'required') ? 'border border-danger' : ''
             }
-            {...register("address", { required: true })}
-            style={{ height: "130px" }}
+            {...register('address', { required: true })}
+            style={{ height: '130px' }}
             as="textarea"
             defaultValue={values?.address}
             placeholder="Address"
