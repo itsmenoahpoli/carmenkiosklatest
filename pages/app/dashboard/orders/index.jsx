@@ -1,28 +1,19 @@
-import React from "react";
-import {
-  Container,
-  Button,
-  Form,
-  Card,
-  Modal,
-  Row,
-  Col,
-  Alert,
-} from "react-bootstrap";
-import TimeAgo from "javascript-time-ago";
-import ReactTimeAgo from "react-time-ago";
-import en from "javascript-time-ago/locale/en.json";
-import ReactToPrint from "react-to-print";
+import React from 'react';
+import { Container, Button, Form, Card, Modal, Row, Col, Alert } from 'react-bootstrap';
+import TimeAgo from 'javascript-time-ago';
+import ReactTimeAgo from 'react-time-ago';
+import en from 'javascript-time-ago/locale/en.json';
+import ReactToPrint from 'react-to-print';
 
-import { DashboardLayout } from "components/layouts";
-import { TableBuilder } from "components/tables";
-import { OrdersService } from "lib/services";
+import { DashboardLayout } from 'components/layouts';
+import { TableBuilder } from 'components/tables';
+import { OrdersService } from 'lib/services';
 
 TimeAgo.addDefaultLocale(en);
 const ordersService = new OrdersService();
 
 const OrdersPage = () => {
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState('');
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [orderModal, setOrderModal] = React.useState({
@@ -50,9 +41,9 @@ const OrdersPage = () => {
 
   const handleMarkOrderAsServed = async () => {
     await ordersService.updateOrderById(orderModal.data.id, {
-      status: "SERVED",
+      status: 'SERVED',
     });
-    await getOrders("");
+    await getOrders('');
 
     handleOrderModal(false, null);
   };
@@ -76,40 +67,34 @@ const OrdersPage = () => {
   const tableColumns = React.useMemo(
     () => [
       {
-        name: "Order Time",
+        name: 'Order Time',
         selected: (row) => row.created_at,
         sortable: true,
-        cell: (row) => (
-          <ReactTimeAgo date={new Date(row.created_at)} locale="en-US" />
-        ),
+        cell: (row) => <ReactTimeAgo date={new Date(row.created_at)} locale="en-US" />,
       },
       {
-        name: "Total Amount",
+        name: 'Total Amount',
         selector: (row) => row.total_amount,
         sortable: true,
       },
       {
-        name: "Payment Method",
+        name: 'Payment Method',
         selector: (row) => row.payment_method,
         sortable: true,
       },
       {
-        name: "Status",
+        name: 'Status',
         selector: (row) => row.status,
         sortable: true,
       },
       {
-        name: "Actions",
+        name: 'Actions',
         selector: (row) => row.id,
         sortable: true,
         right: true,
         cell: (row) => (
           <>
-            <Button
-              variant="link"
-              className="mx-1"
-              onClick={() => handleOrderModal(true, row)}
-            >
+            <Button variant="link" className="mx-1" onClick={() => handleOrderModal(true, row)}>
               View
             </Button>
           </>
@@ -124,7 +109,7 @@ const OrdersPage = () => {
   }, []);
 
   React.useEffect(() => {
-    if (search !== "") {
+    if (search !== '') {
       getOrders(search);
     }
   }, [search]);
@@ -151,20 +136,13 @@ const OrdersPage = () => {
       </Card>
 
       {/* MODAL */}
-      <Modal
-        size="lg"
-        show={orderModal.show}
-        onHide={() => handleOrderModal(false, null)}
-      >
+      <Modal size="lg" show={orderModal.show} onHide={() => handleOrderModal(false, null)}>
         <Modal.Header closeButton>
           <Modal.Title>Order Details</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <div
-            ref={receiptRef}
-            style={{ width: "70%", padding: "40px", margin: "0 auto" }}
-          >
+          <div ref={receiptRef} style={{ width: '70%', padding: '40px', margin: '0 auto' }}>
             <Row>
               <Col>
                 <div className="mb-2">
@@ -186,42 +164,39 @@ const OrdersPage = () => {
               <Col>
                 <div className="mb-2">
                   <p className="fw-bold mb-0">Voided</p>
-                  <small>
-                    {orderModal.data?.is_voided ? "VOIDED" : "NOT VOIDED"}
-                  </small>
+                  <small>{orderModal.data?.is_voided ? 'VOIDED' : 'NOT VOIDED'}</small>
                 </div>
 
                 <div className="mb-2">
                   <p className="fw-bold mb-0">Order Items</p>
                   <small>{formatOrderItems(orderModal.data?.order_cart)}</small>
-                  {console.log(orderModal.data)}
                 </div>
               </Col>
             </Row>
           </div>
 
-          <Container>
+          <br />
+
+          {Boolean(orderModal.data?.status === 'SERVED') && (
+            <Alert variant="success">
+              <small>ORDER SERVED</small>
+            </Alert>
+          )}
+
+          <br />
+
+          <Container className="d-flex rounded" style={{ gap: '20px' }}>
             <ReactToPrint
               trigger={() => (
-                <Button variant="primary" className="mb-2">
-                  Print Receipt
+                <Button variant="info" className="w-100">
+                  Print Order Details
                 </Button>
               )}
               content={() => receiptRef.current}
             />
-          </Container>
 
-          <br />
-
-          <Container>
-            {Boolean(orderModal.data?.status === "SERVED") && (
-              <Alert variant="success">
-                <small>ORDER SERVED</small>
-              </Alert>
-            )}
-
-            {Boolean(orderModal.data?.status === "PENDING") && (
-              <Button onClick={() => handleMarkOrderAsServed()}>
+            {Boolean(orderModal.data?.status === 'PENDING') && (
+              <Button variant="success" className="w-100" onClick={() => handleMarkOrderAsServed()}>
                 MARK AS SERVED
               </Button>
             )}

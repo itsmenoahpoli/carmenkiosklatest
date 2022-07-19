@@ -38,6 +38,11 @@ export const EmployeePayslipForm = (props) => {
     setComputedSalaryAmount(computedSalary.toFixed(2));
   };
 
+  const handleResetAbsent = () => {
+    setComputedSalaryAmount(parseInt(MONTHLY_FIXED_RATE).toFixed(2));
+    setNoOfAbsents(0);
+  };
+
   const handleFormSubmit = async (formValues) => {
     formValues.salary_amount = Number(computedSalary).toFixed(2);
     await formFns.formSubmitFn(formValues);
@@ -119,14 +124,23 @@ export const EmployeePayslipForm = (props) => {
         <FloatingLabel label="Total number of days absent">
           <Form.Control
             type="number"
-            defaultValue={0}
+            value={noOfAbsents}
             placeholder="No. of days absent for deduction"
             min="0"
             onChange={(e) => handleAbsentChange(e.target.value)}
+            disabled={Boolean(computedSalary <= 0)}
           />
         </FloatingLabel>
 
-        <small className="text-muted">No. of days absent</small>
+        <div className="d-flex pt-1" style={{ gap: '10px' }}>
+          <small className="text-muted">No. of days absent</small>
+
+          {Boolean(computedSalary <= 0) && (
+            <Button variant="link" size="sm" className="p-0" onClick={handleResetAbsent}>
+              Reset
+            </Button>
+          )}
+        </div>
       </Form.Group>
 
       <Form.Group className="form-group">
